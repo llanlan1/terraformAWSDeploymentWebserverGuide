@@ -143,7 +143,7 @@ terraform apply -auto-approve
    - **Source**: `0.0.0.0/0`
 2. Click **Save Rules**.
 
-?? **Security Notice**: Using `0.0.0.0/0` is insecure. Restrict it to your specific IP once tested.
+**Security Notice**: Using `0.0.0.0/0` is insecure. Restrict it to your specific IP once tested.
 
 ---
 
