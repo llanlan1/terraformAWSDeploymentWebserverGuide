@@ -1,10 +1,10 @@
-###Terraform AWS Web Server
+#Terraform AWS Web Server
 
 This repository contains a script and a simple, step-by-step guide I've made, using Terraform to provision an EC2 instance on AWS and deploy an NGINX Web Server.
 
 
 
-###Prerequisites
+#Prerequisites
 
 Please do the following before proceeding:
 
@@ -15,7 +15,7 @@ Please do the following before proceeding:
 
 
 
-###Steps
+#Steps
 
 
 1. Do this if you have yet to setup a user in AWS IAM:
@@ -35,16 +35,16 @@ IMPORTANT: Do not navigate away from the page until you note them down somewhere
 
 sudo apt update && sudo apt install -y software-properties-common
 
-# Add the HashiCorp GPG key
+#Add the HashiCorp GPG key
 wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
 
-# Add the HashiCorp repository
+#Add the HashiCorp repository
 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 
-# Update & install Terraform
+#Update & install Terraform
 sudo apt update && sudo apt install -y terraform
 
-# Verify installation
+#Verify installation
 terraform -version  # Output should be something like: Terraform v1.x.x
 
 
@@ -114,7 +114,7 @@ Your webserver has been successfully deployed.
 
 
 
-### Clean-up
+# Clean-up
 
 Run this command:
 
