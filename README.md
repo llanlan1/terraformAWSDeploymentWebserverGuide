@@ -2,127 +2,166 @@
 
 This repository contains a script and a simple, step-by-step guide I've made, using Terraform to provision an EC2 instance on AWS and deploy an NGINX Web Server.
 
+---
 
-
-# Prerequisites
+## Prerequisites
 
 Please do the following before proceeding:
 
--Install AWS CLI on your computer/localhost
--Setup an AWS account
--Install & Setup Ubuntu/Linux (Tested on Ubuntu 18.04.6 LTS)
--Install & Configure Git
+- Install AWS CLI on your computer/localhost
+- Setup an AWS account
+- Install & Setup Ubuntu/Linux (Tested on Ubuntu 18.04.6 LTS)
+- Install & Configure Git
 
+---
 
+## Steps
 
-# Steps
+### **1. Create an IAM User in AWS (If Not Already Done)**
 
+1. In your AWS account, search and navigate to **IAM**.
+2. On the left sidebar, under **Access Management**, click **Users**.
+3. Click **Create User**, add a new username, then click **Next**.
+4. In **Permissions Options**, select **Attach policies directly**.
+5. Under **Permissions policies**, search for `AmazonEC2FullAccess` and check it.
+6. Click **Next**, then create the user.
+7. Note down the **Access Key** and **Secret Key** securely before navigating away from the page.
 
-1. Do this if you have yet to setup a user in AWS IAM:
+---
 
-In your AWS account, search and navigate to IAM.
-On the left sidebar, under Access Management, click/tap on Users
-Create User, add new username, click next, In Permissions Options select Attach policies directly.
-Under Permissions policies, search for AmazonEC2FullAccess and check it, then click next, and create user.
-It should provide you with both the access key and the secret key.
-IMPORTANT: Do not navigate away from the page until you note them down somewhere private. You will need them for later.
+### **2. Run Ubuntu (CLI will open)**
 
+---
 
-2. Run Ubuntu (This will open up the CLI)
+### **3. Install Terraform**
 
+Run the following commands:
 
-3. Install Terraform by running these commands:
-
+```sh
 sudo apt update && sudo apt install -y software-properties-common
+```
 
-#Add the HashiCorp GPG key:
-
+**Add the HashiCorp GPG key:**
+```sh
 wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+```
 
-#Add the HashiCorp repository:
-
+**Add the HashiCorp repository:**
+```sh
 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+```
 
-#Update & install Terraform:
-
+**Update & Install Terraform:**
+```sh
 sudo apt update && sudo apt install -y terraform
+```
 
-#Verify installation:
-
+**Verify installation:**
+```sh
 terraform -version  # Output should be something like: Terraform v1.x.x
+```
 
+---
 
-4. Create a project directory
+### **4. Create a Project Directory**
 
-E.g.:
+```sh
 mkdir terraform-aws-webserver
-
-then
 cd terraform-aws-webserver
+```
 
+---
 
-5. Initialise a Git Repository
+### **5. Initialise a Git Repository**
 
+```sh
 git init
 echo ".terraform/" > .gitignore
+```
 
+---
 
-6. Copy the script in the main.tf file in this github repo
+### **6. Copy the Script into `main.tf`**
 
+---
 
-7. Create a file (you can call it main.tf)
+### **7. Create a File (`main.tf`)**
 
-E.g.
+```sh
 touch main.tf
 vim main.tf
-type i
-paste the script
-hit esc key and type:wq 
+```
 
+1. Press `i` to enter insert mode.
+2. Paste the script.
+3. Press `ESC`, then type `:wq` to save and exit.
 
-8. Run this: aws configure
+---
 
-It will prompt you to enter your access key, then your secret access key.
-Next, enter your region (normally the default region your account is in, e.g. us-east-1)
-Default output format: Leave it blank for default and hit enter.
+### **8. Configure AWS CLI**
 
+Run:
+```sh
+aws configure
+```
 
-9. Run these Terraform commands:
+- Enter **Access Key** and **Secret Key**.
+- Enter **Region** (e.g., `us-east-1`).
+- Leave **Default Output Format** blank and hit Enter.
 
+---
+
+### **9. Run Terraform Commands**
+
+```sh
 terraform init
 terraform plan
 terraform apply -auto-approve
-**It should output a public IP
+```
 
-Your EC2 Instance has been created.
+- This will output a **Public IP** for your EC2 instance.
 
+---
 
-10. Go to your EC2 page in AWS,
+### **10. Configure Security Groups in AWS**
 
-On the left sidebar, scroll down and click on Security Groups under Network & Security
-Click on the security group that has been created for you just
-Click on Edit inbound rules
-Click Add rule, type - select HTTP, type - select TCP, port range - 80, source - leave it as custom/default setting, beside it select 0.0.0.0/0 from the drop down
-Click Save rules. 
-Go back to the Security Groups page, click on Outbound rules > Edit outbound rules
-Click Add rule, type - select SSH, type - select TCP, port range - 22, source - leave it as custom/default setting, beside it select 0.0.0.0/0 from the drop down
-Click Save rules. 
+#### **Inbound Rules**
+1. Go to **EC2 > Security Groups**.
+2. Click on the **Security Group** associated with your instance.
+3. Click **Edit Inbound Rules** ? **Add Rule**:
+   - **Type**: `HTTP`
+   - **Protocol**: `TCP`
+   - **Port Range**: `80`
+   - **Source**: `0.0.0.0/0`
+4. Click **Save Rules**.
 
-** Selecting 0.0.0.0/0 is not very secure; once you've tested for successful deployment you can change and limit this to the user's IP 
+#### **Outbound Rules**
+1. Click **Edit Outbound Rules** ? **Add Rule**:
+   - **Type**: `SSH`
+   - **Protocol**: `TCP`
+   - **Port Range**: `22`
+   - **Source**: `0.0.0.0/0`
+2. Click **Save Rules**.
 
+?? **Security Notice**: Using `0.0.0.0/0` is insecure. Restrict it to your specific IP once tested.
 
-11. Open your Internet browser, type http://your-public-ip-from-step-9 and hit enter
+---
 
-You should see 'Welcome to nginx!' page
-Your webserver has been successfully deployed.
+### **11. Verify Deployment**
 
+Open a browser and go to:
+```
+http://your-public-ip-from-step-9
+```
+You should see **'Welcome to nginx!'**
 
+Your web server has been successfully deployed. ??
 
-# Clean-up
+---
 
-Run this command:
+## **Clean-Up**
 
+To remove all created resources:
+
+```sh
 terraform destroy -auto-approve
-
-
-
