@@ -155,13 +155,13 @@ http://your-public-ip-from-step-9
 ```
 You should see **'Welcome to nginx!'**
 
-Your web server has been successfully deployed. ??
+Your web server has been successfully deployed.
 
 ---
 
 ## **Clean-Up**
 
-To remove all created resources:
+To remove all created resources (so as to not incure running costs):
 
 ```sh
 terraform destroy -auto-approve
