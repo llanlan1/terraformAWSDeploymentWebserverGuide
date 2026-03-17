@@ -128,22 +128,25 @@ terraform apply -auto-approve
 #### **Inbound Rules**
 1. Go to **EC2 > Security Groups**.
 2. Click on the **Security Group** associated with your instance.
-3. Click **Edit Inbound Rules** ? **Add Rule**:
+3. Click **Edit Inbound Rules** → **Add Rule**:
    - **Type**: `HTTP`
    - **Protocol**: `TCP`
    - **Port Range**: `80`
    - **Source**: `0.0.0.0/0`
-4. Click **Save Rules**.
-
-#### **Outbound Rules**
-1. Click **Edit Outbound Rules** ? **Add Rule**:
+4. Add another inbound rule:
    - **Type**: `SSH`
    - **Protocol**: `TCP`
    - **Port Range**: `22`
-   - **Source**: `0.0.0.0/0`
-2. Click **Save Rules**.
+   - **Source**: `Your IP address only`
+5. Click **Save Rules**.
 
-**Security Notice**: Using `0.0.0.0/0` is insecure. Restrict it to your specific IP once tested.
+#### **Outbound Rules**
+Leave as default — allow all outbound traffic so the server can reach external services and download updates. No changes needed.
+
+**Security Notice**: 
+- Restrict SSH inbound to your specific IP address only, not `0.0.0.0/0` — opening SSH to the entire internet is a security risk.
+- In a production environment, consider using a bastion host instead of exposing SSH directly.
+- HTTP port 80 can remain open to `0.0.0.0/0` as this is intentional for public web access.
 
 ---
 
