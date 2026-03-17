@@ -161,7 +161,7 @@ Your web server has been successfully deployed.
 
 ## **Clean-Up**
 
-To remove all created resources (so as to not incure running costs):
+To remove all created resources (so as to not incur running costs):
 
 ```sh
 terraform destroy -auto-approve
