@@ -93,8 +93,11 @@ vim main.tf
 ```
 
 1. Press `i` to enter insert mode.
-2. Paste the script.
-3. Press `ESC`, then type `:wq` to save and exit.
+2. Paste the script from this repository.
+3. Replace `YOUR_IP/32` with your actual IP address.
+   Find your IP by searching "what is my IP" on Google.
+   Format: `123.456.789.0/32`
+4. Press `ESC`, then type `:wq` to save and exit.
 
 ---
 
@@ -125,28 +128,29 @@ terraform apply -auto-approve
 
 ### **10. Configure Security Groups in AWS**
 
+Security groups are defined in `main.tf` and created 
+automatically by Terraform — no manual configuration 
+needed in the AWS console.
+
 #### **Inbound Rules**
-1. Go to **EC2 > Security Groups**.
-2. Click on the **Security Group** associated with your instance.
-3. Click **Edit Inbound Rules** → **Add Rule**:
-   - **Type**: `HTTP`
-   - **Protocol**: `TCP`
-   - **Port Range**: `80`
-   - **Source**: `0.0.0.0/0`
-4. Add another inbound rule:
-   - **Type**: `SSH`
-   - **Protocol**: `TCP`
-   - **Port Range**: `22`
-   - **Source**: `Your IP address only`
-5. Click **Save Rules**.
+| Type | Protocol | Port | Source | Purpose |
+|------|----------|------|--------|---------|
+| HTTP | TCP | 80 | 0.0.0.0/0 | Public web access |
+| SSH | TCP | 22 | Your IP only | Secure remote access |
 
 #### **Outbound Rules**
-Leave as default — allow all outbound traffic so the server can reach external services and download updates. No changes needed.
+| Type | Protocol | Port | Destination | Purpose |
+|------|----------|------|-------------|---------|
+| All traffic | All | All | 0.0.0.0/0 | Server updates and external services |
 
-**Security Notice**: 
-- Restrict SSH inbound to your specific IP address only, not `0.0.0.0/0` — opening SSH to the entire internet is a security risk.
-- In a production environment, consider using a bastion host instead of exposing SSH directly.
-- HTTP port 80 can remain open to `0.0.0.0/0` as this is intentional for public web access.
+**Security Notes:**
+- SSH is restricted to your IP only — not open to 
+  the internet. This follows least privilege.
+- HTTP port 80 is intentionally open to all — 
+  this is a public web server.
+- In production, consider using a bastion host 
+  instead of exposing SSH directly.
+
 
 ---
 
@@ -168,3 +172,4 @@ To remove all created resources (so as to not incur running costs):
 
 ```sh
 terraform destroy -auto-approve
+```
